@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YM - 编程爱好者</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            transition: background-color 0.5s ease, color 0.3s ease;
+        }
+        
+        :root {
+            --primary-bg: linear-gradient(135deg, #1a2980, #26d0ce);
+            --secondary-bg: rgba(13, 36, 85, 0.9);
+            --card-bg: rgba(25, 118, 210, 0.3);
+            --text-color: #fff;
+            --accent-color: #4fc3f7;
+            --shadow-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .dark-mode {
+            --primary-bg: linear-gradient(135deg, #0a0e2a, #0d2b2a);
+            --secondary-bg: rgba(5, 15, 35, 0.9);
+            --card-bg: rgba(15, 50, 90, 0.4);
+            --text-color: #e0e0e0;
+            --accent-color: #2d9cdb;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+        }
+        
+        body {
+            background: var(--primary-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 导航栏样式 */
+        header {
+            background-color: var(--secondary-bg);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        /* 日夜模式切换按钮 */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            width: 30px;
+            height: 21px;
+            justify-content: space-between;
+            z-index: 101;
+        }
+        
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--text-color);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger:hover span {
+            background-color: var(--accent-color);
+        }
+        
+        /* 下拉菜单样式 */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--secondary-bg);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            width: 180px;
+            padding: 10px 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-menu ul {
+            list-style: none;
+        }
+        
+        .dropdown-menu li {
+            padding: 0;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-menu a:hover {
+            background-color: rgba(79, 195, 247, 0.2);
+            color: var(--accent-color);
+        }
+        
+        /* 主要内容区域 */
+        main {
+            flex: 1;
+            padding-bottom: 40px;
+        }
+        
+        .hero {
+            padding: 80px 0 40px;
+            text-align: center;
+        }
+        
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            margin: 0 auto 20px;
+            background-color: var(--secondary-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--accent-color);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px var(--shadow-color);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--accent-color);
+            opacity: 0.8;
+        }
+        
+        /* 技能部分 */
+        .skills {
+            background-color: var(--secondary-bg);
+            padding: 40px 0;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+        }
+        
+        .skills-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .skill-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            width: 200px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .skill-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px var(--shadow-color);
+        }
+        
+        .skill-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+        
+        .skill-name {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        /* 关于我部分 */
+        .about {
+            padding: 40px 0;
+        }
+        
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            line-height: 1.8;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .about-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 联系我部分 */
+        .contact {
+            padding: 40px 0;
+        }
+        
+        .contact-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            line-height: 1.8;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .contact-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icp-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .icp-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            opacity: 0.8;
+        }
+        
+        .icp-links a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+            opacity: 1;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .profile-img {
+                width: 120px;
+                height: 120px;
+                font-size: 2.5rem;
+            }
+            
+            .skill-card {
+                width: 150px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .skill-card {
+                width: 100%;
+            }
+            
+            .dropdown-menu {
+                width: 160px;
+            }
+            
+            .icp-links {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">YM</div>
+            <div class="nav-right">
+                <button class="theme-toggle" id="themeToggle">
+                    <span id="themeIcon">🌙</span>
+                </button>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <!-- 下拉菜单 -->
+            <div class="dropdown-menu" id="dropdownMenu">
+                <ul>
+                    <li><a href="#home">首页</a></li>
+                    <li><a href="#skills">我的技能</a></li>
+                    <li><a href="#about">关于我</a></li>
+                    <li><a href="https://136996.xyz/zz/" target="_blank" id="sponsorLink">赞助</a></li>
+                    <li><a href="#contact">联系我</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 主要内容 -->
+    <main class="container">
+        <!-- 个人介绍部分 -->
+        <section class="hero" id="home">
+            <div class="profile-img">YM</div>
+            <h1>我是YM</h1>
+            <p class="tagline">一个爱编程的小学生</p>
+        </section>
+        
+        <!-- 技能部分 -->
+        <section class="skills" id="skills">
+            <h2 class="section-title">我的技能</h2>
+            <div class="skills-container">
+                <div class="skill-card">
+                    <div class="skill-icon">C++</div>
+                    <h3 class="skill-name">C++</h3>
+                    <p>掌握基础语法和算法</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">Py</div>
+                    <h3 class="skill-name">Python</h3>
+                    <p>了解基础编程概念</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">Web</div>
+                    <h3 class="skill-name">网页开发</h3>
+                    <p>正在学习HTML/CSS</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 关于我部分 -->
+        <section class="about" id="about">
+            <h2 class="section-title">关于我</h2>
+            <div class="about-content">
+                <p>你好！我是奕某（YM），一名热爱编程的小学生。我对计算机科学充满好奇，喜欢探索代码背后的逻辑和创造力。</p>
+                <p>目前我正在学习C++和Python，并尝试用它们解决一些有趣的问题。虽然我还只是编程世界的新手，但我相信通过不断学习和实践，我能够创造出令人惊叹的程序！</p>
+                <p>除了编程，我还喜欢阅读科技书籍、玩益智游戏和探索新知识。我相信编程不仅是一门技能，更是一种思维方式，能够帮助我们更好地理解和改变世界。</p>
+            </div>
+        </section>
+        
+        <!-- 联系我部分 -->
+        <section class="contact" id="contact">
+            <h2 class="section-title">联系我</h2>
+            <div class="contact-content">
+                <p>如果您对我的作品感兴趣，或者想和我交流编程心得，欢迎通过以下方式联系我：</p>
+                <p>邮箱：ym.coder@example.com</p>
+                <p>GitHub：github.com/ym-coder</p>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2023 YM的个人主页 | 热爱编程，探索未来</p>
+            <div class="icp-links">
+                <a href="https://icp.jkun.cf/id.php?keyword=20250494" target="_blank">
+                    <img src="https://shields.wudu.ltd/gen.php?part1=鸡享域站点互联&style=coral&part2=20250494" alt="ICP备案信息">
+                </a>
+                <a href="https://icp.gov.moe/?keyword=20258162" target="_blank">萌ICP备20258162号</a>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // 日夜模式切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+        
+        // 检查本地存储中的主题设置
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.textContent = '☀️';
+        }
+        
+        themeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // 菜单交互功能
+        const hamburger = document.getElementById('hamburger');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const sponsorLink = document.getElementById('sponsorLink');
+        
+        // 点击三条杠切换菜单显示/隐藏
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+        });
+        
+        // 点击菜单项关闭菜单
+        const menuItems = dropdownMenu.querySelectorAll('a');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                dropdownMenu.classList.remove('active');
+            });
+        });
+        
+        // 点击页面其他地方关闭菜单
+        document.addEventListener('click', function() {
+            dropdownMenu.classList.remove('active');
+        });
+        
+        // 阻止菜单区域点击事件冒泡
+        dropdownMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        // 滚动动画效果
+        function checkVisibility() {
+            const skillCards = document.querySelectorAll('.skill-card');
+            const aboutContent = document.querySelector('.about-content');
+            const contactContent = document.querySelector('.contact-content');
+            
+            // 技能卡片动画
+            skillCards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (cardTop < windowHeight * 0.85) {
+                    card.classList.add('visible');
+                }
+            });
+            
+            // 关于我内容动画
+            if (aboutContent) {
+                const aboutTop = aboutContent.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (aboutTop < windowHeight * 0.85) {
+                    aboutContent.classList.add('visible');
+                }
+            }
+            
+            // 联系我内容动画
+            if (contactContent) {
+                const contactTop = contactContent.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (contactTop < windowHeight * 0.85) {
+                    contactContent.classList.add('visible');
+                }
+            }
+        }
+        
+        // 初始化滚动动画
+        window.addEventListener('scroll', checkVisibility);
+        window.addEventListener('load', checkVisibility);
+        
+        // 平滑滚动到锚点
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
